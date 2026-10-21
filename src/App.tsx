@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { AddTaskForm } from "./components/AddTaskForm";
 import { Board } from "./components/Board";
+import { ImportTasksForm } from "./components/ImportTasksForm";
+import type { ImportedTask } from "./domain/import";
 import { loadTasks, saveTasks } from "./domain/storage";
 import { addTask, moveTask, removeTask, type Status, type Task } from "./domain/tasks";
 
@@ -19,6 +21,11 @@ export default function App() {
     setTasks(addTask(tasks, title, crypto.randomUUID()));
   }
 
+  function handleImport(imported: ImportedTask[]) {
+    const created = imported.map((item) => ({ id: crypto.randomUUID(), ...item }));
+    setTasks([...tasks, ...created]);
+  }
+
   function handleMove(id: string, status: Status) {
     setTasks(moveTask(tasks, id, status));
   }
@@ -33,6 +40,7 @@ export default function App() {
         <h1>Трекер задач</h1>
       </header>
       <AddTaskForm onAdd={handleAdd} />
+      <ImportTasksForm onImport={handleImport} />
       <Board tasks={tasks} onMove={handleMove} onDelete={handleDelete} />
     </main>
   );

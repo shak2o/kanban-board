@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
@@ -17,6 +17,10 @@ async function addTask(title: string) {
 
 beforeEach(() => {
   window.localStorage.clear();
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
 });
 
 describe("App", () => {
@@ -67,5 +71,35 @@ describe("App", () => {
     );
     render(<App />);
     expect(getColumn("Готово").getByText("Из хранилища")).toBeTruthy();
+  });
+
+  it("imports tasks from a JSON URL into the board", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify([{ title: "Из сети", status: "in-progress" }]), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+      ),
+    );
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "Импортировать" }));
+
+    expect(await screen.findByRole("status")).toBeTruthy();
+    expect(getColumn("В работе").getByText("Из сети")).toBeTruthy();
+    const stored = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "[]");
+    expect(stored).toHaveLength(1);
+  });
+
+  it("shows an error when the import request fails", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("", { status: 500 })));
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: "Импортировать" }));
+
+    expect((await screen.findByRole("alert")).textContent).toBe("Сервер ответил ошибкой 500");
+    expect(getColumn("К выполнению").queryByRole("listitem")).toBeNull();
   });
 });
