@@ -1,0 +1,130 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #f4f5f7;
+  color: #172b4d;
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  font-size: 28px;
+  margin: 0 0 20px;
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.add-form__row {
+  display: flex;
+  gap: 8px;
+}
+
+.add-form input {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 15px;
+  border: 1px solid #c1c7d0;
+  border-radius: 6px;
+}
+
+button {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #c1c7d0;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #e9ecf2;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+button.danger {
+  color: #b42318;
+}
+
+.add-form button[type="submit"] {
+  background: #0b5cd5;
+  border-color: #0b5cd5;
+  color: #fff;
+}
+
+.error {
+  margin: 0;
+  color: #b42318;
+  font-size: 14px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.column {
+  background: #ebecf0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 240px;
+}
+
+.column--drop-target {
+  border-color: #0b5cd5;
+}
+
+.column h2 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+
+.count {
+  color: #5e6c84;
+  font-weight: normal;
+}
+
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-card {
+  background: #fff;
+  border-radius: 6px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.2);
+  cursor: grab;
+}
+
+.task-title {
+  margin: 0 0 8px;
+  word-break: break-word;
+}
+
+.task-actions {
+  display: flex;
+  gap: 6px;
+}
